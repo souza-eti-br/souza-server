@@ -2,8 +2,8 @@ package br.eti.souza.server;
 
 import br.eti.souza.exception.SystemException;
 import br.eti.souza.exception.UserException;
+import br.eti.souza.json.JSON;
 import br.eti.souza.logger.Logger;
-import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -144,7 +144,12 @@ public final class HandlerManager {
             }
             return Response.build(404, "Not Found").body("{ \"name\": \"Souza Server\", \"message\": \"handler.not.found\" }");
         } catch (UserException e) {
-            return Response.build(412, "Precondition Failed").body("{ \"name\": \"Souza Server\", \"messages\": " + new Gson().toJson(e.getMessages()) + " }");
+            try {
+                return Response.build(412, "Precondition Failed").body("{ \"name\": \"Souza Server\", \"messages\": " + JSON.fromObject(e.getMessages()) + " }");
+            } catch (SystemException ex) {
+                Logger.error(ex);
+                return Response.build(500, "Internal Server Error").body("{ \"name\": \"Souza Server\", \"message\": \"internal.server.error\" }");
+            }
         } catch (SystemException e) {
             Logger.error(e);
             return Response.build(500, "Internal Server Error").body("{ \"name\": \"Souza Server\", \"message\": \"internal.server.error\" }");
