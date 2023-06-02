@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.ServerSocket;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -57,9 +58,9 @@ public class Server {
         var url = basePath;
         if (basePath.startsWith("/")) {
             try {
-            url = Path.of(basePath).toUri().toURL().toString();
-            } catch (Exception e) {
-                e.printStackTrace();
+                url = Path.of(basePath).toUri().toURL().toString();
+            } catch (MalformedURLException e) {
+                Server.LOGGER.log(Level.SEVERE, "Caminho base do resources estatico para arquivos está mal formado.", e);
             }
         } else {
             url = Server.class.getClassLoader().getResource(basePath).toString();
