@@ -133,6 +133,7 @@ public class Server {
             try {
                 response.setContentType(Files.probeContentType(path));
                 response.setContentBody(Files.readAllBytes(path));
+                response.setStaticPath(path);
             } catch (IOException e) {
                 Server.LOGGER.log(Level.SEVERE, "Não foi possível ler o arquivo no caminho estático para o servidor HTTP. Caminho=[".concat(path.toString()).concat("]."));
                 response = new Response(500, "Internal Server Error");
@@ -187,6 +188,15 @@ public class Server {
                                         response.setContentType("text/json");
                                         response.setContentBody(JSON.toJSON(new I18nMessage("not.found", request.getPath())));
                                     }
+                                }
+                                try {
+                                    response.reloadStaticPath();
+                                } catch (IOException e) {
+                                    var path = (response.getStaticPath() != null ? response.getStaticPath().toString() : "null");
+                                    response = new Response(500, "Internal Server Error");
+                                    response.setContentType("text/json");
+                                    response.setContentBody(JSON.toJSON(new I18nMessage("could.not.read.a.file", path)));
+                                    Server.LOGGER.log(Level.SEVERE, "Não foi possível ler o arquivo no caminho estático para o servidor HTTP. Caminho=[".concat(path).concat("]."));
                                 }
                                 Server.writeResponse(request, response, socket.getOutputStream());
                             } catch (UserException e) {

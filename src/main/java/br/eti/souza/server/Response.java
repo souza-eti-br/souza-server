@@ -1,5 +1,8 @@
 package br.eti.souza.server;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -18,6 +21,10 @@ public class Response {
     private final Map<String, String> headers = new HashMap<>();
     /** Conteúdo da resposta. */
     private byte[] contentBody = new byte[0];
+    /** Caminho estático da resposta. */
+    private Path staticPath = null;
+    /** Último momento da recarga do caminho estático da resposta. */
+    private long lastReloadStaticPath = 0L;
 
     /**
      * Construtor que define o código e mensagem do status da resposta.
@@ -53,6 +60,35 @@ public class Response {
     public void setContentBody(byte[] contentBody) {
         this.contentBody = contentBody != null ? contentBody : new byte[0];
         this.headers.put("Content-Length", String.valueOf(this.contentBody.length));
+    }
+
+    /**
+     * Define o caminho stático da resposta.
+     * @param staticPath Caminho estático.
+     */
+    public void setStaticPath(Path staticPath) {
+        this.staticPath = staticPath;
+        this.lastReloadStaticPath = System.currentTimeMillis();
+    }
+
+    /**
+     * Retorna o caminho stático da resposta.
+     * @return Caminho estático.
+     */
+    public Path getStaticPath() {
+        return this.staticPath;
+    }
+
+    /**
+     * Reler arquivo do caminho stático da resposta.
+     * @throws java.io.IOException Caso não consiga reler o arquivo do caminho estático.
+     */
+    protected void reloadStaticPath() throws IOException {
+        if (this.staticPath != null && ((this.lastReloadStaticPath + 1000) < System.currentTimeMillis())) {
+            this.setContentType(Files.probeContentType(this.staticPath));
+            this.setContentBody(Files.readAllBytes(this.staticPath));
+        }
+        this.lastReloadStaticPath = System.currentTimeMillis();
     }
 
     /**
