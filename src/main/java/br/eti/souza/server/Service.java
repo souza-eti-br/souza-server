@@ -20,29 +20,39 @@ public abstract class Service {
      */
     protected Response execute(Request request) throws SystemException, UserException {
         switch (request.getMethod()) {
-            case GET:
+            case GET -> {
                 return this.get(request);
-            case HEAD:
+            }
+            case HEAD -> {
                 return this.head(request);
-            case POST:
+            }
+            case POST -> {
                 return this.post(request);
-            case PUT:
+            }
+            case PUT -> {
                 return this.put(request);
-            case DELETE:
+            }
+            case DELETE -> {
                 return this.delete(request);
-            case CONNECT:
+            }
+            case CONNECT -> {
                 return this.connect(request);
-            case OPTIONS:
+            }
+            case OPTIONS -> {
                 return this.options(request);
-            case TRACE:
+            }
+            case TRACE -> {
                 return this.trace(request);
-            case PATCH:
+            }
+            case PATCH -> {
                 return this.patch(request);
-            default:
+            }
+            default -> {
                 var response = new Response(405, "Method Not Allowed");
                 response.setContentType("text/json");
                 response.setContentBody(JSON.toJSON(new I18nMessage("method.not.allowed", (request.getMethod() != null ? request.getMethod().toString() : "null"))));
                 return response;
+            }
         }
     }
 
