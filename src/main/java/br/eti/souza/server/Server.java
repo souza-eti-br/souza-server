@@ -29,7 +29,7 @@ public class Server {
   /** Logger desta classe. */
   private static final Logger LOGGER = Logger.getLogger(Server.class.getName());
   /** ServerSocket que recebe e responde as requisições. */
-  private static final ServerSocket SERVER = Server.createServerSocket();
+  private static ServerSocket SERVER;
   /** Se servidor esta em execução. */
   private static boolean RUNNING = false;
   /** Mapa dos caminhos estaticos. */
@@ -39,11 +39,12 @@ public class Server {
 
   /**
    * Cria o ServerSocket que recebe e responde as requisições.
+   * @param port Porta para o servidor.
    * @return ServerSocket que recebe e responde as requisições.
    */
-  private static ServerSocket createServerSocket() {
+  private static ServerSocket createServerSocket(int port) {
     try {
-      return new ServerSocket(8080, 0, InetAddress.getByAddress(new byte[]{0, 0, 0, 0}));
+      return new ServerSocket(port, 0, InetAddress.getByAddress(new byte[]{0, 0, 0, 0}));
     } catch (IOException e) {
       Server.LOGGER.log(Level.SEVERE, "Não foi possível iniciar o servidor http.", e);
       return null;
@@ -164,8 +165,19 @@ public class Server {
     Server.SERVICE_PATHS.put(path, service);
   }
 
-  /** Iniciar o servidor. */
-  public static void start() {
+  /**
+   * Iniciar o servidor.
+   * @param port Porta para o servidor.
+   */
+  public static void start(int port) {
+    if (Server.SERVER != null) {
+      try {
+        Server.SERVER.close();
+      } catch (IOException e) {
+        Server.LOGGER.log(Level.SEVERE, e.getMessage(), e);
+      }
+    }
+    Server.SERVER = Server.createServerSocket(port);
     Server.RUNNING = true;
     new Thread(() -> {
       while (!Server.SERVER.isClosed()) {
