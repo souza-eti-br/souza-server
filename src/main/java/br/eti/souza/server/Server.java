@@ -36,6 +36,8 @@ public class Server {
   private static final Map<String, Response> STATIC_PATHS = new HashMap<>();
   /** Mapa dos caminhos para serviços. */
   private static final Map<String, Service> SERVICE_PATHS = new HashMap<>();
+  /** Lista de dominios para cross-domain. */
+  private static String CROSS_DOMAINS = "";
 
   /**
    * Cria o ServerSocket que recebe e responde as requisições.
@@ -168,6 +170,18 @@ public class Server {
   /**
    * Iniciar o servidor.
    * @param port Porta para o servidor.
+   * @param crossDomains Lista de dominios para cross-domain, separado por virgulas.
+   */
+  public static void start(int port, String crossDomains) {
+    if (crossDomains != null) {
+      Server.CROSS_DOMAINS = crossDomains;
+    }
+    Server.start(port);
+  }
+
+  /**
+   * Iniciar o servidor.
+   * @param port Porta para o servidor.
    */
   public static void start(int port) {
     if (Server.SERVER != null) {
@@ -263,6 +277,13 @@ public class Server {
    */
   private static void writeResponse(Request request, Response response, OutputStream outputStream) {
     try {
+      var origin = request.getHeaders().get("Origin");
+      if (origin != null && !origin.isBlank()) {
+        origin = origin.trim();
+        if (Server.CROSS_DOMAINS.contains(origin)) {
+          response.addHeader("Access-Control-Allow-Origin", origin);
+        }
+      }
       if (request == null || request.getVersion().isBlank()) {
         outputStream.write(response.getStatus().concat("\n").getBytes());
       } else {
