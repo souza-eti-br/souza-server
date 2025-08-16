@@ -1,6 +1,5 @@
 package br.eti.souza.server;
 
-import br.eti.souza.configuration.Configuration;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -20,6 +19,6 @@ public class ServerTest {
     /** Verfica se a porta subiu como configurado. */
     @Test
     public void checkPort() {
-        Assertions.assertEquals(9090, Server.getPort());
+        Assertions.assertEquals(7070, Server.getPort());
     }
 }
