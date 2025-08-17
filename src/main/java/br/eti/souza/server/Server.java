@@ -55,7 +55,7 @@ public class Server {
     private static void configureBaseContext() {
         Server.addService("/", new Service() {
             private final static Map<String, Response> CACHE = new HashMap<>();
-            private final static boolean USE_CACHE = Configuration.get("server.use.cache.on.static.folder", true);
+            private final static boolean USE_CACHE = Configuration.get("server.static.folder.use.cache", true);
             private final static String FOLDER = Configuration.get("server.static.folder");
             @Override
             protected Response get(Request request) throws SystemException, UserException {
