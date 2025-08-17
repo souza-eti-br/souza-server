@@ -61,10 +61,8 @@ public class Server {
             protected Response get(Request request) throws SystemException, UserException {
                 if (FOLDER != null && !request.getPath().contains("..")) {
                     if (CACHE.containsKey(request.getPath())) {
-                        System.out.println("COM CACHE");
                         return CACHE.get(request.getPath());
                     } else {
-                        System.out.println("SEM CACHE");
                         var path = Path.of(FOLDER + request.getPath());
                         if (Files.exists(path)) {
                             try {
@@ -79,7 +77,7 @@ public class Server {
                         }
                     }
                 }
-                var body = "{ \"server\": \"".concat(Configuration.get("server.name")).concat("\", \"message\": \"").concat(Messages.get("page.not.found")).concat("\" }").getBytes();
+                var body = "{ \"server\": \"".concat(Configuration.get("server.name", "Souza Server")).concat("\", \"message\": \"").concat(Messages.get("page.not.found")).concat("\" }").getBytes();
                 return Response.create().statusCode(404).body(body);
             }
         });

@@ -32,14 +32,14 @@ public abstract class Service implements HttpHandler {
             } else if ("DELETE".equalsIgnoreCase(request.getMethod())) {
                 response = this.delete(request);
             } else {
-                var body = "{ \"server\": \"".concat(Configuration.get("server.name")).concat("\", \"message\": \"").concat(Messages.get("method.not.allow")).concat("\" }").getBytes();
+                var body = "{ \"server\": \"".concat(Configuration.get("server.name", "Souza Server")).concat("\", \"message\": \"").concat(Messages.get("method.not.allow")).concat("\" }").getBytes();
                 response = Response.create().statusCode(405).body(body);
             }
         } catch (SystemException e) {
-            var body = "{ \"server\": \"".concat(Configuration.get("server.name")).concat("\", \"message\": \"").concat(e.getLocalizedMessage()).concat("\" }").getBytes();
+            var body = "{ \"server\": \"".concat(Configuration.get("server.name", "Souza Server")).concat("\", \"message\": \"").concat(e.getLocalizedMessage()).concat("\" }").getBytes();
             response = Response.create().statusCode(500).body(body);
         } catch (UserException e) {
-            var body = "{ \"server\": \"".concat(Configuration.get("server.name")).concat("\", \"messages\": ").concat(JSON.toJSON(e.getLocalizedMessages())).concat(" }").getBytes();
+            var body = "{ \"server\": \"".concat(Configuration.get("server.name", "Souza Server")).concat("\", \"messages\": ").concat(JSON.toJSON(e.getLocalizedMessages())).concat(" }").getBytes();
             response = Response.create().statusCode(400).body(body);
         }
         response.write(exchange);
@@ -53,7 +53,7 @@ public abstract class Service implements HttpHandler {
      * @throws UserException Caso ocorra erro causado pelo usuário.
      */
     protected Response get(Request request) throws SystemException, UserException {
-        var body = "{ \"server\": \"".concat(Configuration.get("server.name")).concat("\", \"message\": \"").concat(Messages.get("not.implemented")).concat("\" }").getBytes();
+        var body = "{ \"server\": \"".concat(Configuration.get("server.name", "Souza Server")).concat("\", \"message\": \"").concat(Messages.get("not.implemented")).concat("\" }").getBytes();
         return Response.create().statusCode(501).body(body);
     }
 
@@ -65,7 +65,7 @@ public abstract class Service implements HttpHandler {
      * @throws UserException Caso ocorra erro causado pelo usuário.
      */
     protected Response post(Request request) throws SystemException, UserException {
-        var body = "{ \"server\": \"".concat(Configuration.get("server.name")).concat("\", \"message\": \"").concat(Messages.get("not.implemented")).concat("\" }").getBytes();
+        var body = "{ \"server\": \"".concat(Configuration.get("server.name", "Souza Server")).concat("\", \"message\": \"").concat(Messages.get("not.implemented")).concat("\" }").getBytes();
         return Response.create().statusCode(501).body(body);
     }
 
@@ -77,7 +77,7 @@ public abstract class Service implements HttpHandler {
      * @throws UserException Caso ocorra erro causado pelo usuário.
      */
     protected Response put(Request request) throws SystemException, UserException {
-        var body = "{ \"server\": \"".concat(Configuration.get("server.name")).concat("\", \"message\": \"").concat(Messages.get("not.implemented")).concat("\" }").getBytes();
+        var body = "{ \"server\": \"".concat(Configuration.get("server.name", "Souza Server")).concat("\", \"message\": \"").concat(Messages.get("not.implemented")).concat("\" }").getBytes();
         return Response.create().statusCode(501).body(body);
     }
 
@@ -89,7 +89,7 @@ public abstract class Service implements HttpHandler {
      * @throws UserException Caso ocorra erro causado pelo usuário.
      */
     protected Response delete(Request request) throws SystemException, UserException {
-        var body = "{ \"server\": \"".concat(Configuration.get("server.name")).concat("\", \"message\": \"").concat(Messages.get("not.implemented")).concat("\" }").getBytes();
+        var body = "{ \"server\": \"".concat(Configuration.get("server.name", "Souza Server")).concat("\", \"message\": \"").concat(Messages.get("not.implemented")).concat("\" }").getBytes();
         return Response.create().statusCode(501).body(body);
     }
 }
