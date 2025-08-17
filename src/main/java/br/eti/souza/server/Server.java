@@ -71,6 +71,10 @@ public class Server {
                         if (Files.exists(path)) {
                             try {
                                 var response = Response.create().statusCode(200).body(Files.readAllBytes(path));
+                                var contentType = Files.probeContentType(path);
+                                if (contentType != null) {
+                                    response.contentType(contentType);
+                                }
                                 if (USE_CACHE) {
                                     CACHE.put(request.getPath(), response);
                                 }
@@ -81,8 +85,8 @@ public class Server {
                         }
                     }
                 }
-                var body = "{ \"server\": \"".concat(Configuration.get("server.name", "Souza Server")).concat("\", \"message\": \"").concat(Messages.get("page.not.found")).concat("\" }").getBytes();
-                return Response.create().statusCode(404).body(body);
+                var body = "{ \"server\": \"".concat(Configuration.get("server.name", "Souza Server")).concat("\", \"message\": \"").concat(Messages.get("page.not.found")).concat("\" }");
+                return Response.create().statusCode(404).bodyAsJSON(body);
             }
         });
     }

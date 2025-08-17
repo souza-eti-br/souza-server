@@ -3,6 +3,7 @@ package br.eti.souza.server;
 import br.eti.souza.i18n.Messages;
 import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -49,6 +50,28 @@ public class Response {
      */
     public Response contentType(String contentType) {
         this.contentType = contentType;
+        return this;
+    }
+
+    /**
+     * Define corpo JSON da resposta.
+     * @param body Corpo JSON da resposta.
+     * @return A propria resposta.
+     */
+    public Response bodyAsJSON(String body) {
+        this.body = body.getBytes(Charset.forName("UTF-8"));
+        this.contentType = "application/json";
+        return this;
+    }
+
+    /**
+     * Define corpo TEXT da resposta.
+     * @param body Corpo TEXT da resposta.
+     * @return A propria resposta.
+     */
+    public Response bodyAsTEXT(String body) {
+        this.body = body.getBytes(Charset.forName("UTF-8"));
+        this.contentType = "text/plain";
         return this;
     }
 

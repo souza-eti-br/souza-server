@@ -39,7 +39,7 @@ public class ServerTest {
         try {
             var response = HttpClient.newHttpClient().send(HttpRequest.newBuilder(URI.create("http://localhost:7070/teste.html")).GET().build(), HttpResponse.BodyHandlers.ofString());
             Assertions.assertEquals(200, response.statusCode());
-            Assertions.assertEquals("<html><head><title>Teste</title></head><body>Teste</body></html>", response.body());
+            Assertions.assertEquals("<html><head><title>Teste</title></head><body>Ação</body></html>", response.body());
         } catch (InterruptedException | IOException e) {
             Assertions.fail(e.getMessage());
         }
