@@ -63,7 +63,11 @@ public class Server {
                     if (CACHE.containsKey(request.getPath())) {
                         return CACHE.get(request.getPath());
                     } else {
-                        var path = Path.of(FOLDER + request.getPath());
+                        var pathEnds = request.getPath();
+                        if (pathEnds.equals("/")) {
+                            pathEnds = "/index.html";
+                        }
+                        var path = Path.of(FOLDER + pathEnds);
                         if (Files.exists(path)) {
                             try {
                                 var response = Response.create().statusCode(200).body(Files.readAllBytes(path));

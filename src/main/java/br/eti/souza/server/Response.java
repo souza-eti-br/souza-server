@@ -71,7 +71,7 @@ public class Response {
             exchange.sendResponseHeaders(this.statusCode, this.body.length);
             exchange.getResponseHeaders().add("Content-Type", this.contentType);
             exchange.getResponseBody().write(this.body);
-            exchange.getResponseBody().flush();
+            exchange.getResponseBody().close();
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, Messages.get("unable.to.write.http.response"), e);
         }
