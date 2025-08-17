@@ -1,5 +1,10 @@
 package br.eti.souza.server;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -16,9 +21,27 @@ public class ServerTest {
         Server.start();
     }
 
-    /** Verfica se a porta subiu como configurado. */
+    /** Verficar url 404. */
     @Test
-    public void checkPort() {
-        Assertions.assertEquals(7070, Server.getPort());
+    public void teste404() {
+        try {
+            var response = HttpClient.newHttpClient().send(HttpRequest.newBuilder(URI.create("http://localhost:7070/servico-inexistente")).GET().build(), HttpResponse.BodyHandlers.ofString());
+            Assertions.assertEquals(404, response.statusCode());
+            Assertions.assertEquals("{ \"server\": \"Souza Server\", \"message\": \"Página não encontrada\" }", response.body());
+        } catch (InterruptedException | IOException e) {
+            Assertions.fail(e.getMessage());
+        }
+    }
+
+    /** Verficar static folder. */
+    @Test
+    public void testeStaticFolder() {
+        try {
+            var response = HttpClient.newHttpClient().send(HttpRequest.newBuilder(URI.create("http://localhost:7070/teste.html")).GET().build(), HttpResponse.BodyHandlers.ofString());
+            Assertions.assertEquals(200, response.statusCode());
+            Assertions.assertEquals("<html><head><title>Teste</title></head><body>Teste</body></html>", response.body());
+        } catch (InterruptedException | IOException e) {
+            Assertions.fail(e.getMessage());
+        }
     }
 }

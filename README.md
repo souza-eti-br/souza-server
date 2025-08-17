@@ -6,3 +6,7 @@ Servidor HTTP(S) usado pela Souza.eti.br.
    - server.name=Souza Server
 - **Porta do servidor**
    - server.port=9090
+- **Caminho da pasta estatica**
+   - server.static.folder=
+- **Usar cache para pasta estatica**
+   - server.use.cache.on.static.folder=true
