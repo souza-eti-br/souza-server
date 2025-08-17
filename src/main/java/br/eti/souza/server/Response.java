@@ -90,11 +90,11 @@ public class Response {
      * @param exchange HttpExchange da conexão HTTP.
      */
     public void write(HttpExchange exchange) {
-        try {
+        exchange.getResponseHeaders().add("Content-Type", this.contentType);
+        try (var response = exchange.getResponseBody()) {
             exchange.sendResponseHeaders(this.statusCode, this.body.length);
-            exchange.getResponseHeaders().add("Content-Type", this.contentType);
-            exchange.getResponseBody().write(this.body);
-            exchange.getResponseBody().close();
+            response.write(this.body);
+            response.flush();
         } catch (IOException e) {
             LOGGER.log(Level.SEVERE, Messages.get("unable.to.write.http.response"), e);
         }
